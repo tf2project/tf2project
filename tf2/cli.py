@@ -23,7 +23,11 @@ file: {8}
 \033[1mcollected {9} {10}\033[0m
 """
 
-RUN_FOOTER = """{0}\033[1m{1}\033[0m{2}"""
+RUN_FOOTER = """\033[1m{0}{1}\033[0m"""
+
+OUTPUT_STRING = """{0} in {1}s"""
+
+FULLWIDTH_LINE = """{0} {1} {2}"""
 
 TEST_RESULT = """object_name: \033[1m{0}\033[0m
 \u2799 test_func: \033[1m{1}\033[0m {2} \033[1m{3}\033[0m
@@ -35,14 +39,10 @@ def create_fullwidth_line(input_string):
     available_columns = 4 if available_columns < 4 else available_columns
     left_available_columns = available_columns // 2
     right_available_columns = available_columns // 2 + available_columns % 2
-    return "".join(
-        (
-            "=" * (left_available_columns - 1),
-            " ",
-            input_string,
-            " ",
-            "=" * (right_available_columns - 1),
-        )
+    return FULLWIDTH_LINE.format(
+        "=" * (left_available_columns - 1),
+        input_string,
+        "=" * (right_available_columns - 1),
     )
 
 
@@ -87,18 +87,21 @@ def print_run_footer(
     total_passed_tests,
     total_time,
 ):
-    output = ""
+    output_contents = []
     if total_failed_tests:
-        output += f"{total_failed_tests} failed "
+        output_contents.extend([str(total_failed_tests), "failed"])
     if total_passed_tests:
-        output += f"{total_passed_tests} passed "
+        output_contents.extend([str(total_passed_tests), "passed"])
     if not total_failed_tests and not total_passed_tests:
-        output += "nothing "
-    output += f"in {round(total_time, 2)}s"
+        output_contents.append("nothing")
     print(
         RUN_FOOTER.format(
             "\033[92m" if overall_result else "\033[91m",
-            create_fullwidth_line(output),
-            "\033[0m",
+            create_fullwidth_line(
+                OUTPUT_STRING.format(
+                    " ".join((output_contents)),
+                    round(total_time, 2),
+                ),
+            ),
         )
     )

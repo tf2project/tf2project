@@ -28,19 +28,19 @@ class TerraformLoader:
 
 class TerraformPlanLoader(TerraformLoader):
     def __init__(self, plan_file_path=None):
-        self.loader_type = "planloader"
         if plan_file_path is None:
             self._plan_file_path = "./terraform.tfplan"
         else:
             self._plan_file_path = plan_file_path
         super().__init__(self._plan_file_path)
+        self.loader_type = "planloader"
 
 
 class TerraformStateLoader(TerraformLoader):
     def __init__(self, state_file_path=None):
-        self.loader_type = "stateloader"
         if state_file_path is None:
             self._state_file_path = "./terraform.tfstate"
         else:
             self._state_file_path = state_file_path
         super().__init__(self._state_file_path)
+        self.loader_type = "stateloader"

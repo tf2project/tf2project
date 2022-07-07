@@ -13,71 +13,67 @@ class Terraform:
             self._loader_instance = TerraformStateLoader()
         else:
             self._loader_instance = loader_instance
-        self.resources = TerraformObject()
-        self.data = TerraformObject()
-        self.outputs = TerraformObject()
+        self.root = TerraformObject()
         self._load_data()
         self._fetch_target_values()
-        self._parse_root_module_resources()
-        self._parse_child_modules_resources()
+        self._parse_modules(
+            self.root,
+            self._target_values["root_module"],
+        )
         self._parse_outputs()
 
     def _load_data(self):
-        self._terraform_data = self._loader_instance.load()
+        self._data = self._loader_instance.load()
 
     def _fetch_target_values(self):
-        current_loader_type = self._loader_instance.loader_type
-        if current_loader_type == "planloader":
-            self._target_values = self._terraform_data["planned_values"]
-        elif current_loader_type == "stateloader":
-            self._target_values = self._terraform_data["values"]
+        loader_type = self._loader_instance.loader_type
+        if loader_type == "planloader":
+            self._target_values = self._data["planned_values"]
+        elif loader_type == "stateloader":
+            self._target_values = self._data["values"]
         else:
             raise Exception("Invalid terraform resource loader.")
 
-    def _parse_root_module_resources(self):
-        if "resources" not in self._target_values["root_module"]:
-            return None
-        self._parse_resources(
-            "root_module", self._target_values["root_module"]["resources"]
-        )
+    def _parse_modules(self, target_object, target_module):
+        if "resources" in target_module:
+            self._parse_resources(target_object, target_module["resources"])
+        if "child_modules" in target_module:
+            target_object.modules = TerraformObject()
+            for module in target_module["child_modules"]:
+                module_name = module["address"].split(".")[-1].replace("-", "_")
+                setattr(target_object.modules, module_name, TerraformObject())
+                self._parse_modules(
+                    getattr(target_object.modules, module_name),
+                    module,
+                )
 
-    def _parse_child_modules_resources(self):
-        if "child_modules" not in self._target_values["root_module"]:
-            return None
-        for module in self._target_values["root_module"]["child_modules"]:
-            module_name = module["address"].removeprefix("module.").replace("-", "_")
-            self._parse_resources(
-                "_".join((module_name, "module")),
-                module["resources"],
-            )
-
-    def _parse_resources(self, module_name, resources):
+    def _parse_resources(self, target_object, resources):
         for resource in resources:
             if resource["mode"] == "managed":
-                if hasattr(self.resources, module_name) is False:
-                    setattr(self.resources, module_name, TerraformObject())
-                module_object = getattr(self.resources, module_name)
+                if hasattr(target_object, "resources") is False:
+                    target_object.resources = TerraformObject()
+                target_object = target_object.resources
             elif resource["mode"] == "data":
-                if hasattr(self.data, module_name) is False:
-                    setattr(self.data, module_name, TerraformObject())
-                module_object = getattr(self.data, module_name)
+                if hasattr(target_object, "data") is False:
+                    target_object.data = TerraformObject()
+                target_object = target_object.data
             else:
                 raise Exception("Invalid terraform resource mode.")
-            resource_type = resource["type"]
-            if hasattr(module_object, resource_type) is False:
-                setattr(module_object, resource_type, TerraformObject())
-            resource_type_object = getattr(module_object, resource_type)
+            if hasattr(target_object, resource["type"]) is False:
+                setattr(target_object, resource["type"], TerraformObject())
+            resource_type_object = getattr(target_object, resource["type"])
             resource_name = resource["name"].replace("-", "_")
-            if "index" not in resource:
-                setattr(
+            if "index" in resource:
+                if hasattr(resource_type_object, resource_name) is False:
+                    setattr(
+                        resource_type_object,
+                        resource_name,
+                        TerraformObject(),
+                    )
+                resource_name_object = getattr(
                     resource_type_object,
                     resource_name,
-                    TerraformObjectParser(resource),
                 )
-            else:
-                if hasattr(resource_type_object, resource_name) is False:
-                    setattr(resource_type_object, resource_name, TerraformObject())
-                resource_name_object = getattr(resource_type_object, resource_name)
                 if type(resource["index"]) is str:
                     if hasattr(resource_name_object, "instances") is False:
                         setattr(resource_name_object, "instances", {})
@@ -92,20 +88,29 @@ class Terraform:
                     )
                 else:
                     raise Exception("Invalid terraform resource index.")
+            else:
+                setattr(
+                    resource_type_object,
+                    resource_name,
+                    TerraformObjectParser(resource),
+                )
 
     def _parse_outputs(self):
         if "outputs" not in self._target_values:
             return None
+        self.outputs = TerraformObject()
         # FIXME: if the key consists of dashes, it will be cracked.
         for key, value in self._target_values["outputs"].items():
             setattr(self.outputs, key, TerraformObject())
-            output_object = getattr(self.outputs, key)
-            output_object.sensitive = value["sensitive"]
-            output_type = match_regex("<class '(.*)'>", str(type(value["value"])))
-            output_object.type = output_type[1]
+            target_object = getattr(self.outputs, key)
+            target_object.sensitive = value["sensitive"]
+            target_object.type = match_regex(
+                "<class '(.*)'>",
+                str(type(value["value"])),
+            )[1]
             if type(value["value"]) is dict:
-                output_object.value = TerraformObjectParser(
+                target_object.value = TerraformObjectParser(
                     value["value"], testable=False
                 )
             else:
-                output_object.value = value["value"]
+                target_object.value = value["value"]

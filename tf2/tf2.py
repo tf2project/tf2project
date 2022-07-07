@@ -24,9 +24,9 @@ class Tf2:
         self._ignore_errors = ignore_errors
         self._silent_mode = silent_mode
         self._create_result_file = create_result_file
-        self.resources = self._terraform_instance.resources
-        self.data = self._terraform_instance.data
-        self.outputs = self._terraform_instance.outputs
+        self.root = self._terraform_instance.root
+        if hasattr(self._terraform_instance, "outputs") is True:
+            self.outputs = self._terraform_instance.outputs
         self.tests = []
 
     def _find_testable_object(self, object_name):
@@ -34,10 +34,10 @@ class Tf2:
         target_object_tree = object_name.split(".")
         for target_object_name in target_object_tree:
             if hasattr(current_object, target_object_name) is False:
-                raise Exception("Object is not available.")
+                raise Exception(f"Object '{ object_name }' is not available.")
             target_object = getattr(current_object, target_object_name)
             if target_object.testable is False:
-                raise Exception("Object is not testable.")
+                raise Exception(f"Object '{ object_name }' is not testable.")
             current_object = target_object
         return current_object
 
@@ -62,8 +62,8 @@ class Tf2:
     def run(self):
         if self._silent_mode is False:
             print_run_header(
-                self._terraform_instance._terraform_data["terraform_version"],
-                self._terraform_instance._terraform_data["format_version"],
+                self._terraform_instance._data["terraform_version"],
+                self._terraform_instance._data["format_version"],
                 self._terraform_instance._loader_instance.loader_type,
                 self._terraform_instance._loader_instance._terraform_file_path,
                 len(self.tests),
