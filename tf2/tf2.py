@@ -24,10 +24,17 @@ class Tf2:
         self._ignore_errors = ignore_errors
         self._silent_mode = silent_mode
         self._create_result_file = create_result_file
-        self.root = self._terraform_instance.root
-        if hasattr(self._terraform_instance, "outputs") is True:
-            self.outputs = self._terraform_instance.outputs
-        self.tests = []
+        self._fetch_objects()
+        self._tests = []
+
+    def _fetch_objects(self):
+        for object_name in ["resources", "data", "modules", "outputs"]:
+            if hasattr(self._terraform_instance, object_name):
+                setattr(
+                    self,
+                    object_name,
+                    getattr(self._terraform_instance, object_name),
+                )
 
     def _find_testable_object(self, object_name):
         current_object = self
@@ -42,7 +49,7 @@ class Tf2:
         return current_object
 
     def add_test(self, object_name, test_func, ignore_errors=None):
-        self.tests.append(
+        self._tests.append(
             Test(
                 object_name=object_name,
                 object_instance=self._find_testable_object(object_name),
@@ -66,12 +73,12 @@ class Tf2:
                 self._terraform_instance._data["format_version"],
                 self._terraform_instance._loader_instance.loader_type,
                 self._terraform_instance._loader_instance._terraform_file_path,
-                len(self.tests),
+                len(self._tests),
             )
         total_passed_tests = total_failed_tests = 0
         overall_result = True
         start_time = perf_counter()
-        for test in self.tests:
+        for test in self._tests:
             current_test_result = True
             try:
                 if "self" in test.test_func.__code__.co_varnames:

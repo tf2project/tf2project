@@ -13,13 +13,9 @@ class Terraform:
             self._loader_instance = TerraformStateLoader()
         else:
             self._loader_instance = loader_instance
-        self.root = TerraformObject()
         self._load_data()
         self._fetch_target_values()
-        self._parse_modules(
-            self.root,
-            self._target_values["root_module"],
-        )
+        self._parse_modules(self, self._target_values["root_module"])
         self._parse_outputs()
 
     def _load_data(self):
