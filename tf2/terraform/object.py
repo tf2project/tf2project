@@ -1,6 +1,8 @@
 # Terraform Test Framework
 # https://github.com/tf2project/tf2
 
+from .util import get_attr_name
+
 
 class TerraformObject:
     def __init__(self, testable=True):
@@ -10,8 +12,8 @@ class TerraformObject:
 class TerraformObjectParser(TerraformObject):
     def __init__(self, data, testable=True):
         super().__init__(testable)
-        # FIXME: if the key consists of dashes, it will be cracked.
-        for key, value in data.items():
+        for _key, value in data.items():
+            key = get_attr_name(_key)
             if isinstance(value, dict) is True:
                 setattr(self, key, TerraformObjectParser(value, testable=False))
             elif isinstance(value, (list, tuple)) is True:

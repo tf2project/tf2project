@@ -1,10 +1,9 @@
 # Terraform Test Framework
 # https://github.com/tf2project/tf2
 
-from re import match as match_regex
-
 from .loader import TerraformStateLoader
 from .object import TerraformObject, TerraformObjectParser
+from .util import get_attr_name, get_output_type
 
 
 class Terraform:
@@ -36,7 +35,7 @@ class Terraform:
         if "child_modules" in target_module:
             target_object.modules = TerraformObject()
             for module in target_module["child_modules"]:
-                module_name = module["address"].split(".")[-1].replace("-", "_")
+                module_name = get_attr_name(module["address"].split(".")[-1])
                 setattr(target_object.modules, module_name, TerraformObject())
                 self._parse_modules(
                     getattr(target_object.modules, module_name),
@@ -58,7 +57,7 @@ class Terraform:
             if hasattr(target_object, resource["type"]) is False:
                 setattr(target_object, resource["type"], TerraformObject())
             resource_type_object = getattr(target_object, resource["type"])
-            resource_name = resource["name"].replace("-", "_")
+            resource_name = get_attr_name(resource["name"])
             if "index" in resource:
                 if hasattr(resource_type_object, resource_name) is False:
                     setattr(
@@ -95,15 +94,12 @@ class Terraform:
         if "outputs" not in self._target_values:
             return None
         self.outputs = TerraformObject()
-        # FIXME: if the key consists of dashes, it will be cracked.
-        for key, value in self._target_values["outputs"].items():
+        for _key, value in self._target_values["outputs"].items():
+            key = get_attr_name(_key)
             setattr(self.outputs, key, TerraformObject())
             target_object = getattr(self.outputs, key)
             target_object.sensitive = value["sensitive"]
-            target_object.type = match_regex(
-                "<class '(.*)'>",
-                str(type(value["value"])),
-            )[1]
+            target_object.type = get_output_type(value["value"])
             if type(value["value"]) is dict:
                 target_object.value = TerraformObjectParser(
                     value["value"], testable=False
