@@ -1,5 +1,5 @@
 # Terraform Test Framework
-# https://github.com/tf2project/tf2
+# https://github.com/tf2project/tf2project
 
 from os import environ
 
@@ -17,12 +17,12 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="tf2",
+    name="tf2project",
     description="Terraform Test Framework",
     author="Saeid Bostandoust",
     author_email="ssbostan@yahoo.com",
     license="Apache License 2.0",
-    url="https://github.com/tf2project/tf2",
+    url="https://github.com/tf2project/tf2project",
     long_description=readme,
     long_description_content_type="text/markdown",
     project_urls={

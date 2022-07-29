@@ -1,5 +1,5 @@
 # Terraform Test Framework
-# https://github.com/tf2project/tf2
+# https://github.com/tf2project/tf2project
 
 from importlib.metadata import version as package_version
 from os import get_terminal_size, getcwd
@@ -69,7 +69,7 @@ def print_run_header(
             create_fullwidth_line("tf2"),
             system_version().lower(),
             python_version(),
-            package_version("tf2"),
+            package_version("tf2project"),
             terraform_version,
             format_version,
             loader_type,

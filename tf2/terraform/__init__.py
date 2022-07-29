@@ -1,5 +1,5 @@
 # Terraform Test Framework
-# https://github.com/tf2project/tf2
+# https://github.com/tf2project/tf2project
 
 from .loader import *
 from .object import *
