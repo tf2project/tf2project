@@ -3,7 +3,7 @@
 
 from os import environ
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 from tf2 import __version__
 
@@ -36,6 +36,7 @@ setup(
         "Topic :: Software Development :: Testing",
     ],
     version=__version__,
+    packages=find_packages(),
     install_requires=requirements,
     include_package_data=False,
     zip_safe=True,
