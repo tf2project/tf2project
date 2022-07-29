@@ -13,6 +13,9 @@ if environ.get("ENV", "production") == "development":
 else:
     requirements = []
 
+with open("README.md") as f:
+    readme = f.read()
+
 setup(
     name="tf2",
     description="Terraform Test Framework",
@@ -20,6 +23,8 @@ setup(
     author_email="ssbostan@yahoo.com",
     license="Apache License 2.0",
     url="https://github.com/tf2project/tf2",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     project_urls={
         "Documentation": "https://tf2project.io",
     },
