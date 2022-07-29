@@ -26,13 +26,11 @@
 
 ---
 
-**TF2** is a unified test framework to test Terraform codes and Terraform-provisioned infrastructures. With TF2, you can implement PaC(**Policy as Code**), **Compliance** tests, e2e(**End to End**) tests, and all other tests just in a unified framework.
+**TF2** is a unified test framework to test Terraform codes and Terraform-provisioned infrastructures. With TF2, you can implement PaC(**Policy as Code**), **Compliance** tests and e2e(**End to End**) tests just in a unified framework.
 
 ## Requirements
 
-The **TF2 core** doesn't have any external or third-party requirements, and we will keep this approach as the main development policy to reduce the attack surface. This policy is created because you run the TF2 in your critical environments, CI/CD systems, and cloud/on-premises infrastructures, and we want to keep you completely secure.
-
-The TF2 core is just using standard and official Python libraries.
+The **TF2 core** doesn't have any external or third-party requirements, and we will keep this approach as the main development policy to reduce the attack surface. This policy is created because you run the TF2 in your critical environments, CI/CD systems, and cloud/on-premises infrastructures, and we want to keep you completely secure. The TF2 core is just using standard and official Python libraries.
 
 ## Installation
 
