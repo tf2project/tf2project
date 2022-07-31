@@ -47,16 +47,23 @@ class Terraform:
             if resource["mode"] == "managed":
                 if hasattr(target_object, "resources") is False:
                     target_object.resources = TerraformObject()
-                target_object = target_object.resources
+                resource_mode_object = target_object.resources
             elif resource["mode"] == "data":
                 if hasattr(target_object, "data") is False:
                     target_object.data = TerraformObject()
-                target_object = target_object.data
+                resource_mode_object = target_object.data
             else:
                 raise Exception("Invalid terraform resource mode.")
-            if hasattr(target_object, resource["type"]) is False:
-                setattr(target_object, resource["type"], TerraformObject())
-            resource_type_object = getattr(target_object, resource["type"])
+            if hasattr(resource_mode_object, resource["type"]) is False:
+                setattr(
+                    resource_mode_object,
+                    resource["type"],
+                    TerraformObject(),
+                )
+            resource_type_object = getattr(
+                resource_mode_object,
+                resource["type"],
+            )
             resource_name = get_attr_name(resource["name"])
             if "index" in resource:
                 if hasattr(resource_type_object, resource_name) is False:
