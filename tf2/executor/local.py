@@ -4,41 +4,36 @@
 from subprocess import TimeoutExpired
 from subprocess import run as run_subprocess
 
-from .executor import Executor, ExecutorResult
+from .executor import Executor
 
 
 class LocalCommandExecutor(Executor):
-    def __init__(self, command, *args, **kwargs):
-        super().__init__()
-        self._command = command
-        self._args = args
-        self._kwargs = kwargs
-        self._execute()
-
-    def _execute(self):
+    def execute(self, command, *args, **kwargs):
         try:
-            self._command_result = run_subprocess(
-                self._command,
+            result = run_subprocess(
+                command,
                 shell=True,
                 capture_output=True,
-                *self._args,
-                **self._kwargs,
+                *args,
+                **kwargs,
             )
         except TimeoutExpired as e:
-            self._timeout = True
-        except Exception as e:
+            timeout = True
+        except:
             pass
         finally:
-            if hasattr(self, "_command_result") is True:
-                self._complete = True
-                self.result = ExecutorResult(
-                    rc=self._command_result.returncode,
-                    stdout=self._command_result.stdout.decode("utf8"),
-                    complete=self._complete,
+            if "result" in locals():
+                self._is_complete = True
+                self._set_result(
+                    command=command,
+                    rc=result.returncode,
+                    stdout=result.stdout.decode("utf8"),
+                    complete=self._is_complete,
                 )
             else:
-                self._complete = False
-                self.result = ExecutorResult(
-                    complete=self._complete,
-                    timeout=True if hasattr(self, "_timeout") else False,
+                self._is_complete = False
+                self._set_result(
+                    command=command,
+                    timeout=True if "timeout" in locals() else False,
+                    complete=self._is_complete,
                 )

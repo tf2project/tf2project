@@ -5,20 +5,23 @@ from .util import get_attr_name
 
 
 class TerraformObject:
-    def __init__(self, testable=True):
-        self.testable = testable
+    def __init__(self, is_testable=True):
+        self._is_testable = is_testable
+
+    def is_testable(self):
+        return self._is_testable
 
 
 class TerraformObjectParser(TerraformObject):
-    def __init__(self, data, testable=True):
-        super().__init__(testable)
+    def __init__(self, data, is_testable=True):
+        super().__init__(is_testable)
         for _key, value in data.items():
             key = get_attr_name(_key)
             if isinstance(value, dict) is True:
-                setattr(self, key, TerraformObjectParser(value, testable=False))
+                setattr(self, key, TerraformObjectParser(value, False))
             elif isinstance(value, (list, tuple)) is True:
                 items = [
-                    TerraformObjectParser(item, testable=False)
+                    TerraformObjectParser(item, False)
                     if isinstance(item, dict)
                     else item
                     for item in value

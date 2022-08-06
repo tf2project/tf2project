@@ -3,7 +3,6 @@
 
 from importlib.metadata import version as package_version
 from os import get_terminal_size, getcwd
-from os.path import abspath
 from platform import python_version
 from platform import system as system_version
 
@@ -19,7 +18,7 @@ RUN_HEADER = """\033[1m{0}\033[0m
 platform {1}, python {2}
 tf2 {3}, terraform {4}, json {5}, type {6}
 rootdir: {7}
-file: {8}
+datapath: {8}
 \033[1mcollected {9} {10}\033[0m
 """
 
@@ -61,7 +60,7 @@ def print_run_header(
     terraform_version,
     format_version,
     loader_type,
-    terraform_file_path,
+    terraform_data_path,
     total_tests,
 ):
     print(
@@ -74,7 +73,7 @@ def print_run_header(
             format_version,
             loader_type,
             getcwd(),
-            abspath(terraform_file_path),
+            terraform_data_path,
             total_tests,
             "tests" if total_tests > 1 else "test",
         )

@@ -3,17 +3,19 @@
 
 from .executor import *
 from .terraform import *
+from .test import *
 from .tf2 import *
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 __all__ = [
     "Executor",
-    "ExecutorResult",
     "LocalCommandExecutor",
     "Terraform",
     "TerraformLoader",
+    "TerraformLocalFileLoader",
     "TerraformPlanLoader",
     "TerraformStateLoader",
+    "Test",
     "Tf2",
 ]

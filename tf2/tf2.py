@@ -43,7 +43,7 @@ class Tf2:
             if hasattr(current_object, target_object_name) is False:
                 raise Exception(f"Object '{ object_name }' is not available.")
             target_object = getattr(current_object, target_object_name)
-            if target_object.testable is False:
+            if target_object.is_testable() is False:
                 raise Exception(f"Object '{ object_name }' is not testable.")
             current_object = target_object
         return current_object
@@ -69,10 +69,10 @@ class Tf2:
     def run(self):
         if self._silent_mode is False:
             print_run_header(
-                self._terraform_instance._data["terraform_version"],
-                self._terraform_instance._data["format_version"],
-                self._terraform_instance._loader_instance.loader_type,
-                self._terraform_instance._loader_instance._terraform_file_path,
+                self._terraform_instance.get_data()["terraform_version"],
+                self._terraform_instance.get_data()["format_version"],
+                self._terraform_instance.get_loader_instance().get_loader_type(),
+                self._terraform_instance.get_loader_instance().get_data_path(),
                 len(self._tests),
             )
         total_passed_tests = total_failed_tests = 0
@@ -85,7 +85,7 @@ class Tf2:
                     test.test_func(test.object_instance)
                 else:
                     test.test_func()
-            except Exception as e:
+            except:
                 current_test_result = False
             if current_test_result is True:
                 total_passed_tests += 1

@@ -1,7 +1,7 @@
 # Terraform Test Framework
 # https://github.com/tf2project/tf2project
 
-from .loader import TerraformStateLoader
+from .local import TerraformStateLoader
 from .object import TerraformObject, TerraformObjectParser
 from .util import get_attr_name, get_output_type
 
@@ -17,11 +17,19 @@ class Terraform:
         self._parse_modules(self, self._target_values["root_module"])
         self._parse_outputs()
 
+    def get_loader_instance(self):
+        return self._loader_instance
+
+    def get_data(self):
+        if hasattr(self, "_data") is False:
+            raise Exception("Data is not loaded.")
+        return self._data
+
     def _load_data(self):
         self._data = self._loader_instance.load()
 
     def _fetch_target_values(self):
-        loader_type = self._loader_instance.loader_type
+        loader_type = self._loader_instance.get_loader_type()
         if loader_type == "planloader":
             self._target_values = self._data["planned_values"]
         elif loader_type == "stateloader":
@@ -109,7 +117,7 @@ class Terraform:
             target_object.type = get_output_type(value["value"])
             if type(value["value"]) is dict:
                 target_object.value = TerraformObjectParser(
-                    value["value"], testable=False
+                    data=value["value"], is_testable=False
                 )
             else:
                 target_object.value = value["value"]
