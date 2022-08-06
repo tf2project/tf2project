@@ -1,7 +1,7 @@
 # Terraform Test Framework
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tf2project/tf2project/master/docs/assets/logo.png" alt="Terraform Test Framework">
+  <img src="https://raw.githubusercontent.com/tf2project/tf2project/master/logo.png" alt="Terraform Test Framework">
 </p>
 
 <p align="center">Unified Test Framework to test Terraform codes and Terraform-provisioned infrastructures.</p>
