@@ -5,8 +5,8 @@
 class TerraformLoader:
     def __init__(self):
         self._is_loader = True
-        self._loader_type = "undefined"
-        self._data_path = "undefined"
+        self._loader_type = None
+        self._data_path = None
 
     def load(self):
         raise Exception("Method is not implemented.")
