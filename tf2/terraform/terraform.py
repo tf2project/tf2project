@@ -114,10 +114,13 @@ class Terraform:
             setattr(self.outputs, key, TerraformObject())
             target_object = getattr(self.outputs, key)
             target_object.sensitive = value["sensitive"]
-            target_object.type = get_output_type(value["value"])
-            if type(value["value"]) is dict:
-                target_object.value = TerraformObjectParser(
-                    data=value["value"], is_testable=False
-                )
+            if "value" in value:
+                target_object.type = get_output_type(value["value"])
+                if type(value["value"]) is dict:
+                    target_object.value = TerraformObjectParser(
+                        data=value["value"], is_testable=False
+                    )
+                else:
+                    target_object.value = value["value"]
             else:
-                target_object.value = value["value"]
+                target_object.type = target_object.value = None
