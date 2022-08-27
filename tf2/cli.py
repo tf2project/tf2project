@@ -34,7 +34,10 @@ TEST_RESULT = """object_name: \033[1m{0}\033[0m
 
 
 def create_fullwidth_line(input_string):
-    available_columns = get_terminal_size().columns - len(input_string)
+    try:
+        available_columns = get_terminal_size().columns - len(input_string)
+    except:
+        available_columns = 80 - len(input_string)
     available_columns = 4 if available_columns < 4 else available_columns
     left_available_columns = available_columns // 2
     right_available_columns = available_columns // 2 + available_columns % 2
