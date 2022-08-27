@@ -1,0 +1,8 @@
+[tool.coverage.run]
+source = ["tf2"]
+branch = true
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+junit_family = "xunit2"
+addopts = "-xv"

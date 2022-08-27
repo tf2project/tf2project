@@ -164,3 +164,8 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+### Tf2 ###
+!terraform-*.tfplan.test
+!terraform-*.tfstate.test
+.tf2result
