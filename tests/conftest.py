@@ -6,7 +6,7 @@ from os.path import abspath
 
 import pytest
 
-TF_CLI_VERSION = environ.get("TF_CLI_VERSION", "1.2.7")
+TF_CLI_VERSION = environ.get("TF_CLI_VERSION", "1.2.9")
 
 
 @pytest.fixture
