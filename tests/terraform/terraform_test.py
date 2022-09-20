@@ -3,11 +3,9 @@
 
 import pytest
 
-from tf2 import Terraform, TerraformPlanLoader, TerraformStateLoader
 
-
-def test_terraform_tfplan_data(terraform_tfplan_file_path):
-    terraform = Terraform(TerraformPlanLoader(terraform_tfplan_file_path))
+def test_terraform_tfplan_instance(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert hasattr(terraform, "_data") is True
     assert hasattr(terraform, "_loader_instance") is True
     assert hasattr(terraform, "_load_data") is True
@@ -21,7 +19,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
     assert hasattr(terraform, "resources") is True
     assert hasattr(terraform, "modules") is True
     assert hasattr(terraform, "outputs") is True
-    ################### Terraform Resources Tests ####################
+
+
+def test_terraform_tfplan_resources(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert terraform.resources.null_resource.test1.values.triggers is None
     assert terraform.resources.null_resource.test2.values.triggers is None
     assert type(terraform.resources.null_resource.test_count.instances) is list
@@ -60,7 +61,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
     assert (
         terraform.resources.local_file.test2.values.content == "Test 2 from Terraform"
     )
-    ############### Terraform Resources __ALL__ Tests ################
+
+
+def test_terraform_tfplan_resources_all_feature(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert hasattr(terraform.resources, "__all__") is True
     assert type(terraform.resources.__all__) is dict
     assert len(terraform.resources.__all__) == 5
@@ -146,7 +150,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
         terraform.resources.local_file.__all__["test2"]
         is terraform.resources.local_file.test2
     )
-    #################### Terraform Modules Tests #####################
+
+
+def test_terraform_tfplan_modules(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert (
         terraform.modules.test_earth.resources.local_file.test.values.content
         == "Hello Earth"
@@ -155,7 +162,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
         terraform.modules.test_moon.resources.local_file.test.values.content
         == "Hello Moon"
     )
-    ################# Terraform Modules __ALL__ Tests ################
+
+
+def test_terraform_tfplan_modules_all_feature(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert hasattr(terraform.modules, "__all__") is True
     assert type(terraform.modules.__all__) is dict
     assert len(terraform.modules.__all__) == 2
@@ -163,7 +173,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
     assert ("test_moon" in terraform.modules.__all__) is True
     assert terraform.modules.__all__["test_earth"] is terraform.modules.test_earth
     assert terraform.modules.__all__["test_moon"] is terraform.modules.test_moon
-    #################### Terraform Outputs Tests #####################
+
+
+def test_terraform_tfplan_outputs(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert terraform.outputs.test_number.sensitive is False
     assert terraform.outputs.test_number.type == "int"
     assert terraform.outputs.test_number.value == 10
@@ -188,7 +201,10 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
     assert terraform.outputs.test_moon_output.sensitive is False
     assert terraform.outputs.test_moon_output.type == "str"
     assert terraform.outputs.test_moon_output.value == "moon.log"
-    ################ Terraform Outputs __ALL__ Tests #################
+
+
+def test_terraform_tfplan_outputs_all_feature(terraform_tfplan_instance):
+    terraform = terraform_tfplan_instance
     assert hasattr(terraform.outputs, "__all__") is True
     assert type(terraform.outputs.__all__) is dict
     assert len(terraform.outputs.__all__) == 8
@@ -216,8 +232,8 @@ def test_terraform_tfplan_data(terraform_tfplan_file_path):
     )
 
 
-def test_terraform_tfstate_data(terraform_tfstate_file_path):
-    terraform = Terraform(TerraformStateLoader(terraform_tfstate_file_path))
+def test_terraform_tfstate_instance(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert hasattr(terraform, "_data") is True
     assert hasattr(terraform, "_loader_instance") is True
     assert hasattr(terraform, "_load_data") is True
@@ -232,7 +248,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
     assert hasattr(terraform, "resources") is True
     assert hasattr(terraform, "modules") is True
     assert hasattr(terraform, "outputs") is True
-    ###################### Terraform Data Tests ######################
+
+
+def test_terraform_tfstate_data(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert (
         terraform.data.local_file.test_data_resource.values.filename == "testdata.txt"
     )
@@ -240,7 +259,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
         terraform.data.local_file.test_data_resource.values.content
         == "Terraform Test Framework\nFor test Terraform Data Resource\nhttps://tf2project.io\n"
     )
-    ################## Terraform Data __ALL__ Tests ##################
+
+
+def test_terraform_tfstate_data_all_feature(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert hasattr(terraform.data, "__all__") is True
     assert type(terraform.data.__all__) is dict
     assert len(terraform.data.__all__) == 1
@@ -254,7 +276,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
         terraform.data.local_file.__all__["test_data_resource"]
         is terraform.data.local_file.test_data_resource
     )
-    ################### Terraform Resources Tests ####################
+
+
+def test_terraform_tfstate_resources(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert terraform.resources.null_resource.test1.values.triggers is None
     assert terraform.resources.null_resource.test2.values.triggers is None
     assert type(terraform.resources.null_resource.test_count.instances) is list
@@ -293,7 +318,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
     assert (
         terraform.resources.local_file.test2.values.content == "Test 2 from Terraform"
     )
-    ############### Terraform Resources __ALL__ Tests ################
+
+
+def test_terraform_tfstate_resources_all_feature(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert hasattr(terraform.resources, "__all__") is True
     assert type(terraform.resources.__all__) is dict
     assert len(terraform.resources.__all__) == 5
@@ -379,10 +407,16 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
         terraform.resources.local_file.__all__["test2"]
         is terraform.resources.local_file.test2
     )
-    ############## Terraform Resources After Apply Tests #############
+
+
+def test_terraform_tfstate_resources_after_apply(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert len(terraform.resources.random_string.test_string.values.result) == 8
     assert len(terraform.resources.random_password.test_password.values.result) == 8
-    #################### Terraform Modules Tests #####################
+
+
+def test_terraform_tfstate_modules(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert (
         terraform.modules.test_earth.resources.local_file.test.values.content
         == "Hello Earth"
@@ -391,7 +425,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
         terraform.modules.test_moon.resources.local_file.test.values.content
         == "Hello Moon"
     )
-    ################# Terraform Modules __ALL__ Tests ################
+
+
+def test_terraform_tfstate_modules_all_feature(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert hasattr(terraform.modules, "__all__") is True
     assert type(terraform.modules.__all__) is dict
     assert len(terraform.modules.__all__) == 2
@@ -399,7 +436,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
     assert ("test_moon" in terraform.modules.__all__) is True
     assert terraform.modules.__all__["test_earth"] is terraform.modules.test_earth
     assert terraform.modules.__all__["test_moon"] is terraform.modules.test_moon
-    #################### Terraform Outputs Tests #####################
+
+
+def test_terraform_tfstate_outputs(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert terraform.outputs.test_number.sensitive is False
     assert terraform.outputs.test_number.type == "int"
     assert terraform.outputs.test_number.value == 10
@@ -424,7 +464,10 @@ def test_terraform_tfstate_data(terraform_tfstate_file_path):
     assert terraform.outputs.test_moon_output.sensitive is False
     assert terraform.outputs.test_moon_output.type == "str"
     assert terraform.outputs.test_moon_output.value == "moon.log"
-    ################ Terraform Outputs __ALL__ Tests #################
+
+
+def test_terraform_tfstate_outputs_all_feature(terraform_tfstate_instance):
+    terraform = terraform_tfstate_instance
     assert hasattr(terraform.outputs, "__all__") is True
     assert type(terraform.outputs.__all__) is dict
     assert len(terraform.outputs.__all__) == 8

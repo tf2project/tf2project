@@ -4,5 +4,6 @@ branch = true
 
 [tool.pytest.ini_options]
 testpaths = "tests"
+python_classes = "PyTest*"
 junit_family = "xunit2"
 addopts = "-xv"
