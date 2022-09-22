@@ -8,7 +8,7 @@ import pytest
 
 from tf2 import Terraform, TerraformPlanLoader, TerraformStateLoader
 
-TF_CLI_VERSION = environ.get("TF_CLI_VERSION", "1.2.9")
+TF_CLI_VERSION = environ.get("TF_CLI_VERSION", None)
 
 
 @pytest.fixture

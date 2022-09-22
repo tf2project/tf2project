@@ -166,6 +166,7 @@ override.tf.json
 terraform.rc
 
 ### Tf2 ###
-!terraform-*.tfplan.test
-!terraform-*.tfstate.test
+terraform-*.tfplan.test
+terraform-*.tfstate.test
+.terraform.lock.hcl
 .tf2result
