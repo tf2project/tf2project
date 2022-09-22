@@ -46,7 +46,8 @@ COPY . .
 
 RUN cd artifacts && terraform init && terraform validate \
   && terraform plan -out terraform-v${TF_CLI_VERSION}.tfplan.test \
-  && terraform apply -auto-approve && cp terraform.tfstate terraform-v${TF_CLI_VERSION}.tfstate.test
+  && terraform apply -auto-approve \
+  && cp terraform.tfstate terraform-v${TF_CLI_VERSION}.tfstate.test
 
 RUN TF_CLI_CHDIR=/opt/src/artifacts coverage run -m pytest
 
