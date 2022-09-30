@@ -7,7 +7,7 @@
 <p align="center">Unified Test Framework to test Terraform codes and Terraform-provisioned infrastructures.</p>
 
 <p align="center">
-<strong>The first release, v0.1.0 (Shadowman) is now available.</strong>
+<strong>The new version, v0.2.0 (Freedom) is now available.</strong>
 </p>
 
 <p align="center">
@@ -24,6 +24,8 @@
 
 **Source Code:** <a href="https://github.com/tf2project/tf2project" target="_blank">https://github.com/tf2project/tf2project</a>
 
+**Changelog:** <a href="https://tf2project.io/changelog.html" target="_blank">https://tf2project.io/changelog.html</a>
+
 ---
 
 **TF2** is a unified test framework to test Terraform codes and Terraform-provisioned infrastructures. With TF2, you can implement PaC(**Policy as Code**), **Compliance** tests and e2e(**End to End**) tests just in a unified framework.
@@ -34,17 +36,25 @@ The **TF2 core** doesn't have any external or third-party requirements, and we w
 
 ## Installation
 
-On production environment:
+On **production** environment:
 
 ```bash
 pip install tf2project
 ```
 
-On development environment:
+On **development** environment:
 
 ```bash
 export ENV=development
 pip install git+https://github.com/tf2project/tf2project
+```
+
+## Docker Image
+
+You can also use our official Docker image to run the framework. The image `tf2project/tf2project` consists of the latest version of Terraform and the TF2 framework itself. It's a ready-to-go image to integrate the TF2 within CI/CD pipelines.
+
+```bash
+docker run tf2project/tf2project:latest
 ```
 
 ## License
