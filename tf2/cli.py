@@ -7,13 +7,13 @@ from platform import python_version
 from platform import system as system_version
 
 RUN_HEADER = """\033[1m{0}\033[0m
-   __________   ________    _______
+   \033[92m__________   ________    _______
   |\___   ___\ |\  _____\  /  ___  \\
-  \|___ \  \_| \ \  \__/  /__/|_/  /|
+  \|___ \  \_| \ \  \__/  /__/|_/  /|\033[0m
        \ \  \   \ \   __\ |__|//  / /
         \ \  \   \ \  \_|     /  /_/__
-         \ \__\   \ \__\     |\________\\
-          \|__|    \|__|     \|________| Terraform Test Framework
+         \033[91m\ \__\   \ \__\     |\________\\ Dedicated to Iran and Iranians
+          \|__|    \|__|     \|________| Terraform Test Framework\033[0m
 
 platform {1}, python {2}
 tf2 {3}, terraform {4}, json {5}, type {6}
