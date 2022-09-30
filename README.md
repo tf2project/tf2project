@@ -51,7 +51,9 @@ pip install git+https://github.com/tf2project/tf2project
 
 ## Docker Image
 
-You can also use our official Docker image to run the framework. The image `tf2project/tf2project` consists of the latest version of Terraform and the TF2 framework itself. It's a ready-to-go image to integrate the TF2 within CI/CD pipelines.
+You can also use our official Docker image to run the framework. The image `tf2project/tf2project` consists of the latest version of Terraform and the TF2 framework itself.
+
+It's a ready-to-go image to integrate the TF2 within CI/CD pipelines.
 
 ```bash
 docker run tf2project/tf2project:latest
